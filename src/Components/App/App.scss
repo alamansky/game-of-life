@@ -1,0 +1,13 @@
+@import './../../shared_styles/shared';
+
+html {
+    @include interpolate(font-size, $mobile, $desktop-large, 12px, 24px);
+
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}

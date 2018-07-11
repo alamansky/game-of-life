@@ -1,0 +1,43 @@
+{
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"es6": true
+	},
+	"extends": [
+		"prettier"
+	],
+	"parser": "babel-eslint",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"experimentalObjectRestSpread": true,
+			"jsx": true
+		},
+		"sourceType": "module"
+	},
+	"plugins": [
+		"prettier"
+	],
+	"rules": {
+		"indent": [
+			"error",
+			"tab"
+		],
+		"linebreak-style": [
+			"off",
+			"unix"
+		],
+		"quotes": [
+			"error",
+			"single"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"prettier/prettier": [
+			"error"
+		],
+		"strict": 0
+	}
+}

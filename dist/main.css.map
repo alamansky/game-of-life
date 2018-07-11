@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/main.css","webpack:///./src/Components/Child/Child.css"],"names":[],"mappings":"AAAA,MAAM,gBAAgB,QAAQ,UAAU,MAAM,W;ACA9C,SAAS,W","file":"main.css","sourcesContent":[".test{display:visible}.header{color:red}.derp{color:#000}",".header2{color:#fff}"],"sourceRoot":""}

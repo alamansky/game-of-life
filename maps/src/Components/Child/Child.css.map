@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/Components/Child/Child.scss"],"names":[],"mappings":"AAEA,QACI,kBAAmB,CACtB","file":"../../../../src/Components/Child/Child.css","sourcesContent":["@import './../../shared_styles/shared';\r\n\r\n.header {\r\n    visibility: visible;\r\n}"]}
