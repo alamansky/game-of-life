@@ -1,63 +1,49 @@
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+/** @format */
 
 const path = require('path');
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
-	entry: { main: './src/index.js' },
+	mode: 'production',
+	entry: './src/index.js',
 	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'main.js'
+		path: path.resolve(__dirname, 'dist'), //default filename
+		filename: 'main.js', //default path
 	},
 	module: {
 		rules: [
+			{ test: /\.js$/, use: ['babel-loader'] },
 			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						cacheDirectory: false
-					}
-				}
-			},
-			{
-				test: /\.html$/,
+				test: /\.scss$/,
 				use: [
 					{
-						loader: 'html-loader',
-						options: { minimize: true }
-					}
-				]
-			},
-			{
-				test: /\.css$/,
-				use: [
-					{
-						loader: MiniCssExtractPlugin.loader
+						loader: 'style-loader',
+						options: {
+							sourceMap: true, //change for production
+						},
 					},
 					{
 						loader: 'css-loader',
 						options: {
-							minimize: true,
-							sourceMaps: true,
-							modules: true,
-							localIdentName: '[local]-[hash:base64:5]'
-						}
-					}
-				]
-			}
-		]
+							sourceMap: true, //change for production
+						},
+					},
+					{
+						loader: 'sass-loader',
+						options: {
+							sourceMap: true, //change for production
+						},
+					},
+				],
+			},
+		],
 	},
 	plugins: [
-		new HtmlWebPackPlugin({
+		new HtmlWebpackPlugin({
 			template: './src/index.html',
-			filename: './index.html'
+			filename: './index.html',
 		}),
-		new MiniCssExtractPlugin({
-			filename: '[name].css',
-			chunkFilename: '[id].css'
-		})
 	],
-	devtool: 'source-map'
+	devtool: 'source-map', //change for production
 };

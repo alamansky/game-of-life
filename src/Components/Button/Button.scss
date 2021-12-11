@@ -1,0 +1,10 @@
+button {
+    background-color: c(white);
+    border: 0px;
+    padding: 0.2rem;
+    min-width: 3rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

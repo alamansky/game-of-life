@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Child from './../Child/Child.js';
 import Grid from './../Grid/Grid.js';
-import Box from './../Box/Box.js';
-import Buttons from './../Buttons/Buttons';
+import Button from './../Button/Button';
 
-import './App.css';
+import cloneArray from '../../functions/cloneArray';
+import createNestedArray from '../../functions/createNestedArray';
+
+import './App.scss';
 
 class App extends React.Component {
 	constructor(props) {
@@ -18,58 +19,49 @@ class App extends React.Component {
 
 		this.state = {
 			generation: 0,
-			gridFull: Array(this.rows).fill(Array(this.cols).fill(false))
+			grid: createNestedArray(this.rows, this.cols, false)
 		};
 	}
 
-	selectBox = (row, col) => {
-		let gridCopy = arrayClone(this.state.gridFull);
-		gridCopy[row][col] = !gridCopy[row][col];
-		this.setState({ gridFull: gridCopy });
-	}
-
-	seed = () => {
-		let gridCopy = arrayClone(this.state.gridFull);
-		for (let i = 0; i < this.rows; i++) {
-			for (let j = 0; j < this.cols; j++) {
-				if (Math.floor(Math.random() * 3) === 1) {
-					gridCopy[i][j] = true;
-				}
-			}
-		}
-		this.setState({ gridFull: gridCopy });
-	}
-
-	playButton = () => {
+	play = () => {
 		clearInterval(this.intervalId);
-		this.intervalId = setInterval(this.play, this.speed);
+		this.intervalId = setInterval(this.update, this.speed);
 	}
 
-	pauseButton = () => {
+	pause = () => {
 		clearInterval(this.intervalId);
-	}
-
-	slow = () => {
-		this.speed = 2000;
-		this.playButton();
-	}
-
-	fast = () => {
-		this.speed = 100;
-		this.playButton();
 	}
 
 	clear = () => {
-		var grid = Array(this.rows).fill(Array(this.cols).fill(false));
+		var grid = createNestedArray(this.rows, this.cols, false);
 		this.setState({
-			gridFull: grid,
+			grid: grid,
 			generation: 0
 		});
+		this.pause();
 	}
 
-	play = () => {
-		let g = this.state.gridFull;
-		let g2 = arrayClone(this.state.gridFull);
+	seed = () => {
+		let newGrid = createNestedArray(this.rows, this.cols, false);
+		for (let i = 0; i < this.rows; i++) {
+			for (let j = 0; j < this.cols; j++) {
+				if (Math.floor(Math.random() * 3) === 1) {
+					newGrid[i][j] = true;
+				}
+			}
+		}
+		this.setState({ grid: newGrid });
+	}
+
+	changeSpeed = (e) => {
+		console.log(e.target.value);
+		this.speed = 2000 - e.target.value;
+		this.play();
+	}
+
+	update = () => {
+		let g = this.state.grid;
+		let g2 = cloneArray(this.state.grid);
 
 		for (let i = 0; i < this.rows; i++) {
 			for (let j = 0; j < this.cols; j++) {
@@ -88,44 +80,55 @@ class App extends React.Component {
 		}
 
 		this.setState({
-			gridFull: g2,
+			grid: g2,
 			generation: this.state.generation + 1
 		});
 	}
 
+	toggleCell = (row, col) => {
+		let newGrid = cloneArray(this.state.grid);
+		newGrid[row][col] = !newGrid[row][col];
+		this.setState({ grid: newGrid });
+	}
+
 	componentDidMount() {
 		this.seed();
-		this.playButton();
 	}
 
 	render() {
 		return (
-			<div>
+			<div className="container">
 				<h1>The Game of Life</h1>
-				<Buttons
-					playButton={this.playButton}
-					pauseButton={this.pauseButton}
-					slow={this.slow}
-					fast={this.fast}
-					clear={this.clear}
-					seed={this.seed}
-					gridSize={this.gridSize}
-				/>
+				<nav className="menu">
+				<Button action={this.play} text={"Play"}/>
+				<Button action={this.pause} text={"Pause"}/>
+				<Button action={this.clear} text={"Clear"}/>
+				<Button action={this.seed} text={"Seed"}/>
+				<span>
+					<input type="range" name="speed" id="speed" max="1900" min="0" defaultValue="1000" onChange={(e) => this.changeSpeed(e)}></input>
+					<label htmlFor="speed">Speed</label>
+				</span>
+				</nav>
 				<Grid
-					gridFull={this.state.gridFull}
+					grid={this.state.grid}
 					cols={this.cols}
 					rows={this.rows}
-					selectBox={this.selectBox}
+					toggleCell={this.toggleCell}
 				/>
-				<h2>Generatrions: {this.state.generation}</h2>
-				<Child props={this.state.init} />
+				<h3>Generations: {this.state.generation}</h3>
+				<p>Rules:</p>
+				<blockquote cite="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
+					<ol>
+						<li>Any live cell with two or three live neighbours survives.</li>
+						<li>Any dead cell with three live neighbours becomes a live cell.</li>
+						<li>All other live cells die in the next generation. Similarly, all other dead cells stay dead.</li>
+
+					</ol>
+					<cite><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">- "Conway's Game of Life", Wikipedia</a></cite>
+				</blockquote>
 			</div>
 		);
 	}
-}
-
-function arrayClone(arr) {
-	return JSON.parse(JSON.stringify(arr));
 }
 
 export default App;

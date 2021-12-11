@@ -1,32 +1,29 @@
 import React, { Component } from 'react';
 
-import Box from './../Box/Box';
-import './Grid.css';
+import Cell from '../Cell/Cell';
 
 export default class Grid extends Component {
 	render() {
 		const width = this.props.cols * 14;
 		const rowsArr = [];
 
-		var boxClass = '';
-		for (var i = 0; i < this.props.rows; i++) {
-			for (var j = 0; j < this.props.cols; j++) {
-				let boxId = i + '_' + j;
-				boxClass = this.props.gridFull[i][j] ? 'box on' : 'box off';
+		for (let i = 0; i < this.props.rows; i++) {
+			for (let j = 0; j < this.props.cols; j++) {
+				let id = i + '_' + j;
 				rowsArr.push(
-					<Box
-						boxClass={boxClass}
-						key={boxId}
-						boxId={boxId}
+					<Cell
+						isAlive={this.props.grid[i][j]}
+						key={id}
+						id={id}
 						row={i}
 						col={j}
-						selectBox={this.props.selectBox}
+						toggleCell={this.props.toggleCell}
 					/>
 				);
 			}
 		}
 		return (
-			<div styleName='grid' style={{ width: width, }}>
+			<div className='grid' style={{ width: width, }}>
 				{rowsArr}
 			</div>
 		);
